@@ -1,6 +1,7 @@
 package alien
 
 import (
+	"fmt"
 	"net"
 	"net/http"
 	"path"
@@ -27,7 +28,7 @@ type routerEntry struct {
 }
 
 type Handler interface {
-	ServeHTTP(w http.ResponseWriter, r *http.Request)
+	ServeHTTP(ctx *Context)
 }
 
 type HandlerFunc func(ctx *Context)
@@ -142,7 +143,7 @@ func (router *Router) handler(host, path string, method string) (h Handler, patt
 	h, pattern, pathVariables = router.match(path, method)
 
 	if h == nil {
-		h, pattern, pathVariables = http.NotFoundHandler(), "", make(map[string]string)
+		h, pattern, pathVariables = NotFoundHandler(), "", make(map[string]string)
 	}
 	return
 }
@@ -185,6 +186,23 @@ func (router *Router) fetchEntries(method string) (entries map[string] *routerEn
 		entries = router.deleteEntries
 	}
 	return
+}
+
+// NotFoundHandler returns a simple request handler
+// that replies to each request with a ``404 page not found'' reply.
+func NotFoundHandler() Handler { return HandlerFunc(NotFound) }
+
+func NotFound(ctx *Context) { Error(ctx.w, "404 page not found", http.StatusNotFound) }
+
+// Error replies to the request with the specified error message and HTTP code.
+// It does not otherwise end the request; the caller should ensure no further
+// writes are done to w.
+// The error message should be plain text.
+func Error(w http.ResponseWriter, error string, code int) {
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	w.WriteHeader(code)
+	fmt.Fprintln(w, error)
 }
 
 // stripHostPort returns h without any trailing ":<port>".
