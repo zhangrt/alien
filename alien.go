@@ -13,19 +13,19 @@ type Application struct {
 	router *Router
 }
 
+var application *Application
+
 func BuildApplication() *Application  {
 	port := flag.String("port", ":80", "http listen port")
 
 	flag.Parse()
-	application := &Application{port: *port, router: NewRouter()}
+	application = &Application{port: *port, router: NewRouter()}
 	return application
 }
 
 func GetApplication() *Application  {
 	return application
 }
-
-var application *Application
 
 func (app *Application) GetPort() (port string)  {
 	port = app.port
