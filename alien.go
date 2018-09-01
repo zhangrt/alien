@@ -21,6 +21,10 @@ func BuildApplication() *Application  {
 	return application
 }
 
+func GetApplication() *Application  {
+	return application
+}
+
 var application *Application
 
 func (app *Application) GetPort() (port string)  {
