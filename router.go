@@ -33,8 +33,8 @@ type Handler interface {
 type HandlerFunc func(ctx *Context)
 
 // ServeHTTP calls f(w, r).
-func (f HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	//f(w, r)
+func (f HandlerFunc) ServeHTTP(ctx *Context) {
+	f(ctx)
 }
 
 func NewRouter() *Router  {
@@ -121,7 +121,7 @@ func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
 	ctx.pathVariables = pathVariables
 	ctx.w = w
 	ctx.r = r
-	h.(HandlerFunc)(ctx)
+	h.ServeHTTP(ctx)
 }
 
 func (router *Router) Handler(r *http.Request) (h Handler, pattern string, pathVariables map[string]string) {
