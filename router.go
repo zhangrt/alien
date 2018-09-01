@@ -154,6 +154,10 @@ func (router *Router) match(path string, method string) (h Handler, pattern stri
 	entries := router.fetchEntries(method)
 	pathVariables = make(map[string]string)
 
+	if entries == nil {
+		h = NotFoundHandler()
+	}
+
 	// Check for exact match first.
 	v, ok := entries[path]
 	if ok {
@@ -162,7 +166,7 @@ func (router *Router) match(path string, method string) (h Handler, pattern stri
 
 	// Check for longest valid match.
 	for k, entry := range entries {
-		if entry.regex.MatchString(path) {
+		if entry.regex != nil && entry.regex.MatchString(path) {
 			parts := strings.Split(path, "/")
 			for index, pathVariable := range entry.pathVariables{
 				pathVariables[pathVariable] = parts[index]
@@ -171,6 +175,10 @@ func (router *Router) match(path string, method string) (h Handler, pattern stri
 			pattern = k
 			break
 		}
+	}
+	if h == nil {
+		h = NotFoundHandler()
+		pattern = path
 	}
 	return
 }
