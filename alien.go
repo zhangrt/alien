@@ -14,7 +14,7 @@ type Application struct {
 
 func BuildApplication() *Application  {
 	application := &Application{port: ":80", router: NewRouter()}
-	err := http.ListenAndServe(application.getPort(), application.getRouter())
+	err := http.ListenAndServe(application.GetPort(), application.GetRouter())
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
