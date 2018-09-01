@@ -120,8 +120,8 @@ func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
 	ctx := new(Context)
 	ctx.pattern = pattern
 	ctx.pathVariables = pathVariables
-	ctx.w = w
-	ctx.r = r
+	ctx.ResponseWriter = w
+	ctx.Request = r
 	h.ServeHTTP(ctx)
 }
 
@@ -192,7 +192,7 @@ func (router *Router) fetchEntries(method string) (entries map[string] *routerEn
 // that replies to each request with a ``404 page not found'' reply.
 func NotFoundHandler() Handler { return HandlerFunc(NotFound) }
 
-func NotFound(ctx *Context) { Error(ctx.w, "404 page not found", http.StatusNotFound) }
+func NotFound(ctx *Context) { Error(ctx.ResponseWriter, "404 page not found", http.StatusNotFound) }
 
 // Error replies to the request with the specified error message and HTTP code.
 // It does not otherwise end the request; the caller should ensure no further

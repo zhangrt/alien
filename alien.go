@@ -38,14 +38,14 @@ func (app *Application) GetRouter() (router *Router)  {
 }
 
 func sayHelloName(ctx *Context)  {
-	ctx.r.ParseForm()
-	fmt.Println(ctx.r.Form)
-	fmt.Println("path", ctx.r.URL.Path)
-	fmt.Println("scheme", ctx.r.URL.Scheme)
-	fmt.Println(ctx.r.Form["url_long"])
-	for k, v := range ctx.r.Form {
+	ctx.Request.ParseForm()
+	fmt.Println(ctx.Request.Form)
+	fmt.Println("path", ctx.Request.URL.Path)
+	fmt.Println("scheme", ctx.Request.URL.Scheme)
+	fmt.Println(ctx.Request.Form["url_long"])
+	for k, v := range ctx.Request.Form {
 		fmt.Println("key:", k)
 		fmt.Println("val:", strings.Join(v, ""))
 	}
-	fmt.Fprintf(ctx.w, "Hello astaxie")
+	fmt.Fprintf(ctx.ResponseWriter, "Hello astaxie")
 }
