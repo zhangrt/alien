@@ -23,12 +23,12 @@ func BuildApplication() *Application  {
 
 var application *Application
 
-func (app *Application) getPort() (port string)  {
+func (app *Application) GetPort() (port string)  {
 	port = app.port
 	return
 }
 
-func (app *Application) getRouter() (router *Router)  {
+func (app *Application) GetRouter() (router *Router)  {
 	router = app.router
 	return
 }
