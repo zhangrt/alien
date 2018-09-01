@@ -1,6 +1,7 @@
 package alien
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -13,11 +14,10 @@ type Application struct {
 }
 
 func BuildApplication() *Application  {
-	application := &Application{port: ":80", router: NewRouter()}
-	err := http.ListenAndServe(application.GetPort(), application.GetRouter())
-	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
-	}
+	port := flag.String("port", ":80", "http listen port")
+
+	flag.Parse()
+	application := &Application{port: *port, router: NewRouter()}
 	return application
 }
 
@@ -35,6 +35,13 @@ func (app *Application) GetPort() (port string)  {
 func (app *Application) GetRouter() (router *Router)  {
 	router = app.router
 	return
+}
+
+func (app *Application) Listen()  {
+	err := http.ListenAndServe(application.GetPort(), application.GetRouter())
+	if err != nil {
+		log.Fatal("ListenAndServe: ", err)
+	}
 }
 
 func sayHelloName(ctx *Context)  {
