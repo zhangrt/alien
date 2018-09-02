@@ -35,15 +35,17 @@ func BuildApplication() *Application  {
 		}
 	}
 
-	application = &Application{port: *port, router: NewRouter(), }
+	application = &Application{port: *port, router: NewRouter(), db: nil}
 	return application
 }
 
 func CreateDbConnPool() (db *gorm.DB, err error) {
 	if config != nil {
 		db, err = gorm.Open("postgres", config.Conn)
-		application.db = db
-		fmt.Println("数据库连接成功")
+		if err == nil {
+			application.db = db
+			fmt.Println("数据库连接成功")
+		}
 	} else {
 		err = errors.New("请正确配置数据库连接串")
 	}
