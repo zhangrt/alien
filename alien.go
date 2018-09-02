@@ -50,7 +50,7 @@ func CreateDbConnPool() (db *gorm.DB, err error) {
 	return
 }
 
-func Close()  {
+func CloseDbConn()  {
 	if application != nil && application.db != nil {
 		application.db.Close()
 	}
