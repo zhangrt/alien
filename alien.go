@@ -72,6 +72,11 @@ func (app *Application) GetRouter() (router *Router)  {
 	return
 }
 
+func (app *Application) GetDb() (db *gorm.DB)  {
+	db = app.db
+	return
+}
+
 func (app *Application) Listen()  {
 	err := http.ListenAndServe(application.GetPort(), application.GetRouter())
 	if err != nil {
